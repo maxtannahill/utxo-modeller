@@ -116,6 +116,11 @@ h1, h2, h3 {
 .unit-btn {
     flex: 1;
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 14px; /* Removed vertical padding, let Flexbox handle vertical centering */
+    margin: 0; /* Strips any hidden browser margins */
     background: transparent;
     color: var(--text-muted);
     border: none;
