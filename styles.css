@@ -93,7 +93,31 @@ h1, h2, h3 {
     color: var(--brand-white) !important;
     border-color: var(--primary-blue) !important;
 }
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
 
+.github-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    background: var(--bg-panel);
+    border-radius: 4px;
+    transition: 0.2s;
+    font-family: 'Ubuntu', sans-serif;
+}
+.github-btn:hover {
+    color: var(--brand-white);
+    border-color: var(--primary-blue);
+}
 /* Prominent Unit Toggle */
 .unit-toggle { 
     display: inline-flex; 
@@ -277,6 +301,8 @@ input[type="range"] { width: 100%; margin-top: 10px; accent-color: var(--primary
     }
     
     .brand-box-controls { flex-direction: column; align-items: stretch; gap: 10px; }
+    .action-buttons { flex-direction: column; width: 100%; }
+    .github-btn { width: 100%; }
     .about-btn { text-align: center; width: 100%; }
     .unit-toggle { display: flex; width: 100%; }
 
