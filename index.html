@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unspent.to - UTXO Modeller</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body id="top">
+
+    <div class="modal-overlay" id="utxo-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0;">Configure Dummy UTXOs</h2>
+                <button class="close-btn" onclick="closeModal('utxo-modal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 12px; margin-top: 0; color: var(--text-muted);">Base input explicitly measured in BTC.</p>
+                
+                <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color);">
+                    <label class="input-label" style="color: var(--brand-white);">Quick Import (Excel / CSV):</label>
+                    <textarea id="csv-input" rows="8" class="full-input" placeholder="Paste columns from Excel here...&#10;Format: Size, Count&#10;1.5, 10&#10;0.25, 50"></textarea>
+                    <button class="btn-secondary" onclick="importCSV()" style="margin-bottom: 0; padding: 8px; font-size: 12px;">↳ Import & Overwrite Table</button>
+                </div>
+
+                <table id="utxo-table" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">Size (BTC)</th>
+                            <th style="width: 30%;">Count</th>
+                            <th style="width: 20%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="utxo-tbody">
+                        <tr><td><input type="number" step="any" value="1" class="btc-size" style="width:100%"></td><td><input type="number" value="9" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                        <tr><td><input type="number" step="any" value="0.5" class="btc-size" style="width:100%"></td><td><input type="number" value="38" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                        <tr><td><input type="number" step="any" value="0.352806" class="btc-size" style="width:100%"></td><td><input type="number" value="1" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                        <tr><td><input type="number" step="any" value="0.1" class="btc-size" style="width:100%"></td><td><input type="number" value="149" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                        <tr><td><input type="number" step="any" value="0.05" class="btc-size" style="width:100%"></td><td><input type="number" value="100" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                        <tr><td><input type="number" step="any" value="0.01" class="btc-size" style="width:100%"></td><td><input type="number" value="96" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                        <tr><td><input type="number" step="any" value="0.005" class="btc-size" style="width:100%"></td><td><input type="number" value="108" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                        <tr><td><input type="number" step="any" value="0.0033" class="btc-size" style="width:100%"></td><td><input type="number" value="28" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                        <tr><td><input type="number" step="any" value="0.001" class="btc-size" style="width:100%"></td><td><input type="number" value="50" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                        <tr><td><input type="number" step="any" value="0.0005" class="btc-size" style="width:100%"></td><td><input type="number" value="106" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                        <tr><td><input type="number" step="any" value="0.0004" class="btc-size" style="width:100%"></td><td><input type="number" value="115" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                        <tr><td><input type="number" step="any" value="0.0001" class="btc-size" style="width:100%"></td><td><input type="number" value="50" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                        <tr><td><input type="number" step="any" value="0.00001" class="btc-size" style="width:100%"></td><td><input type="number" value="50" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                        <tr><td><input type="number" step="any" value="0.00000294" class="btc-size" style="width:100%"></td><td><input type="number" value="100" class="utxo-count" style="width:100%"></td><td><button class="btn-remove" onclick="removeRow(this)">✕</button></td></tr>
+                    </tbody>
+                </table>
+                <button class="btn-secondary" onclick="addRow()" style="margin-bottom: 0;">+ Add Size Tier</button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('utxo-modal')" style="margin-bottom: 0;">Cancel</button>
+                <button onclick="applyDummyData()">Save & Apply Data</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="about-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0;">About UTXO Modeller</h2>
+                <button class="close-btn" onclick="closeModal('about-modal')">✕</button>
+            </div>
+            <div class="modal-body about-content">
+                <h3>What is a UTXO?</h3>
+                <p>Bitcoin doesn't use accounts or balances like a traditional bank. Instead, it uses <strong>Unspent Transaction Outputs (UTXOs)</strong>. Think of your wallet as a piggy bank holding various digital bills and coins. If you receive 1 BTC, 0.5 BTC, and 0.1 BTC in three separate transactions, your wallet balance is 1.6 BTC, but underneath it is constructed of those three distinct UTXO "bills".</p>
+                
+                <h3>The Cost of Spending</h3>
+                <p>When you send Bitcoin, your wallet must digitally sign and unlock these UTXOs. Every UTXO you consume adds data (bytes) to the overall size of your transaction. Because block space is limited, miners charge fees based on the <strong>byte size</strong> of the transaction, not the monetary value being sent.</p>
+                <p>Spending a hundred tiny 0.001 BTC inputs to spend 0.1 BTC requires a massive amount of data, resulting in a significantly higher miner fee than spending a single 0.1 BTC input.</p>
+
+                <h3>The Dust Problem</h3>
+                <p>If network fee rates rise (e.g., 300 sat/vByte), the cost to unlock a small UTXO might actually exceed the value of the UTXO itself. This renders the UTXO economically "Unspendable" or trapped as <strong>Dust</strong>.</p>
+
+                <h3>How This Tool Helps</h3>
+                <p>The UTXO Modeller allows treasury operators to:</p>
+                <ul style="color: var(--text-muted); font-size: 14px;">
+                    <li><strong>Visualise:</strong> Instantly see the composition of an address and identify which UTXOs are currently trapped by network fees.</li>
+                    <li><strong>Simulate:</strong> Test different Coin Selection algorithms (Oldest First, Largest First, Branch & Bound) to see exactly how your wallet builds transactions under the hood.</li>
+                    <li><strong>Optimise:</strong> Predict exact fee impacts, prevent dust creation during change generation, and time large consolidations when network conditions are favourable.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal('about-modal')">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        
+        <div class="brand-box">
+            <div class="brand-box-titles">
+                <h1>Unspent.to</h1>
+                <p>UTXO Modeller</p>
+            </div>
+            <div class="brand-box-controls">
+                <button class="btn-secondary about-btn" onclick="openModal('about-modal')">About</button>
+                <div class="unit-toggle">
+                    <button id="btn-unit-btc" class="unit-btn active" onclick="setUnit('BTC')">BTC</button>
+                    <button id="btn-unit-sats" class="unit-btn" onclick="setUnit('SATS')">SATS</button>
+                </div>
+            </div>
+        </div>
+
+        <h2>1. UTXO Composition</h2>
+        <button class="btn-secondary" onclick="openModal('utxo-modal')" style="margin-bottom: 0;">⚙ Configure Dummy Data</button>
+
+        <div class="section-divider" style="margin-top: 15px; padding-top: 15px;">
+            <label class="input-label" style="color: var(--text-main);">Load Real Wallet Data: <span style="font-size: 11px; color: var(--text-muted); font-weight: normal;">(Comma separated allowed)</span></label>
+            <input type="text" id="btc-address-input" class="full-input" placeholder="e.g. 1NDyJ..., bc1q...">
+            <button class="btn-secondary spacer-bottom" onclick="fetchRealUtxos()" style="margin-bottom: 10px;">Fetch Real Address UTXOs</button>
+            
+            <div class="network-selector" id="network-group">
+                <label><input type="radio" name="network" value="mainnet" checked> Mainnet</label>
+                <label><input type="radio" name="network" value="testnet"> Testnet</label>
+                <label><input type="radio" name="network" value="testnet4"> Testnet4</label>
+                <label><input type="radio" name="network" value="signet"> Signet</label>
+            </div>
+        </div>
+
+        <div class="section-divider">
+            <h2>2. Network Conditions</h2>
+            <label for="fee-slider" class="input-label"><span id="fee-label-text">Manual Network Fee</span>: <strong style="color: var(--primary-blue);"><span id="fee-val">350</span> sat/vB</strong></label>
+            <input type="range" id="fee-slider" min="1" max="1000" step="1" value="350">
+            <button id="btn-fetch-fee" class="btn-secondary" onclick="fetchLiveMempoolFee()" style="margin-top: 15px; margin-bottom: 0; font-size: 12px; padding: 8px;">⟳ Fetch Live Mempool Fee</button>
+        </div>
+
+        <div class="section-divider" id="sim-controls">
+            <h2>3. Simulate Spend</h2>
+            
+            <label class="input-label">Coin Selection Strategy:</label>
+            <select id="coin-selection-strategy" class="full-input spacer-bottom">
+                <option value="oldest" selected>Oldest First (FIFO)</option>
+                <option value="largest">Largest First</option>
+                <option value="bnb">Branch and Bound (Zero-Change)</option>
+            </select>
+            
+            <label class="input-label" style="display: flex; align-items: center; justify-content: space-between;">
+                <span>Target Spend Amount:</span>
+                <span style="font-size: 11px; color: var(--text-muted); font-weight: normal;">(Defaults to 50% of spendable balance)</span>
+            </label>
+            <input type="text" id="target-spend" class="full-input">
+            <button onclick="spendAll()" class="btn-secondary spacer-bottom" style="font-size: 12px; padding: 8px;">Sweep All Spendable UTXOs</button>
+            
+            <label class="input-label">Total Target Outputs (Spend + Change):</label>
+            <input type="number" id="target-outputs" class="full-input" min="1" value="2">
+        </div>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="metrics-row" id="summary-metrics">
+            </div>
+
+        <div class="visual-container" id="tx-selection-container">
+            <h2 id="tx-manifest-title" style="display:flex; justify-content: space-between; align-items: center;">
+                <span>Proposed Transaction</span>
+                <div>
+                    <a href="#top" class="anchor-link" title="Back to Top">↑</a>
+                    <a href="#utxo-treemap-section" class="anchor-link" title="Jump to Chart">↓</a>
+                </div>
+            </h2>
+            <div id="tx-selection-badges"></div>
+            <div id="tx-details-content" style="background: var(--bg-body); border: 1px solid var(--border-color); border-radius: 6px; padding: 15px;">
+                </div>
+        </div>
+
+        <div class="visual-container" id="utxo-treemap-section">
+            <h2 style="display:flex; justify-content: space-between; align-items: center;">
+                <span>UTXO Spendability Grouping</span>
+                <div>
+                    <a href="#tx-selection-container" class="anchor-link">↑</a>
+                    <a href="#Optimal-section" class="anchor-link">↓</a>
+                </div>
+            </h2>
+            
+            <div id="utxo-inspector" style="display: none; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 600px; background: rgba(24, 24, 27, 0.95); border: 1px solid var(--primary-blue); padding: 20px; border-radius: 8px; z-index: 100; box-shadow: 0 16px 40px rgba(0,0,0,0.8); backdrop-filter: blur(4px);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;">
+                    <div>
+                        <h3 style="margin: 0; color: var(--brand-white); font-size: 16px;">Selected UTXO Details</h3>
+                        <p style="margin: 0; color: var(--text-muted); font-size: 12px; margin-top: 4px;" id="inspector-status"></p>
+                    </div>
+                    <button onclick="document.getElementById('utxo-inspector').style.display='none'" style="width: auto; padding: 6px 12px; font-size: 12px; background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); cursor: pointer;">✕ Close</button>
+                </div>
+                <div style="font-family: 'Ubuntu Mono', monospace; font-size: 14px; color: var(--text-muted); line-height: 1.8; word-break: break-all;">
+                    <span style="color: var(--brand-white);">ADDR:</span> <span id="inspector-addr"></span><br>
+                    <span style="color: var(--brand-white);">TXID:</span> <span id="inspector-txid"></span><br>
+                    <span style="color: var(--brand-white);">DATE:</span> <span id="inspector-date"></span><br>
+                    <span style="color: var(--brand-white);">SIZE:</span> <span id="inspector-amt" style="color: var(--primary-blue); font-weight: 700;"></span>
+                </div>
+            </div>
+
+            <div id="utxo-treemap" style="flex: 1; min-height: 450px; width: 100%;"></div>
+        </div>
+
+        <div class="tables-grid" id="tables-grid">
+            </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
