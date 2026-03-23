@@ -20,7 +20,7 @@ It categorizes every UTXO into a 6-tier heatmap based on its required fee impact
 
 ## Key Features
 * **Live Network Sync:** Fetches real-time recommended fees and UTXO data via the [mempool.space](https://mempool.space/) API (Supports Mainnet, Testnet, Testnet4, and Signet).
-* **Interactive Treemap:** A macro-visualization of wallet composition powered by Plotly.js.
+* **Interactive Treemap:** A macro-visualisation of wallet composition powered by Plotly.js.
 * **Sandbox Mode:** Inject dummy data or paste directly from CSV/Excel to test algorithmic outcomes without exposing real public keys.
 * **Transaction Simulation Engine:** Test how different algorithms build transactions under the hood, including:
   * Oldest First (FIFO)
