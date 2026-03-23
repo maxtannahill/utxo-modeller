@@ -861,7 +861,7 @@ function renderDashboard(feeRate) {
         if (parents[i] === '' || parents[i] === 'Wallet') {
             hovertemplates.push("%{label}<extra></extra>");
         } else {
-            // Minimized hover template
+            // Minimised hover template
             hovertemplates.push(`<b>%{customdata.exact_amt}</b> BTC<br>%{customdata.status}<extra></extra>`);
         }
     }
