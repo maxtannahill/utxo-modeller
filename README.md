@@ -2,8 +2,6 @@
 
 A visual simulation engine for custodians and advanced operators of Bitcoin wallets to analyse and optimise their Unspent Transaction Outputs (UTXOs).
 
-Live deployment: [unspent.to](https://unspent.to)
-
 ## The Problem
 When Bitcoin network fee rates spike, smaller UTXOs can become economically unspendable ("dust") because the data cost to unlock them exceeds their actual value. Treasury operators need a way to mathematically predict these fee impacts, visualize their wallet health, and strategically time their consolidations.
 
